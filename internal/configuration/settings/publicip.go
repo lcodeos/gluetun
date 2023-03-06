@@ -24,6 +24,11 @@ type PublicIP struct {
 }
 
 func (p PublicIP) validate() (err error) {
+	if *p.Period == time.Second * 0 {
+		// public ip check disabled
+		return nil
+	}
+
 	const minPeriod = 5 * time.Second
 	if *p.Period < minPeriod {
 		return fmt.Errorf("%w: %s must be at least %s",

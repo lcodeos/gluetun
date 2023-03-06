@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
-
+	"time"
 	"github.com/qdm12/gluetun/internal/constants"
 	"github.com/qdm12/gluetun/internal/models"
 	"github.com/qdm12/gluetun/internal/publicip/ipinfo"
@@ -12,6 +12,11 @@ import (
 
 func (l *Loop) Run(ctx context.Context, done chan<- struct{}) {
 	defer close(done)
+
+	if *l.state.GetSettings().Period == time.Second * 0 {
+		// public ip check disabled
+		return nil
+	}
 
 	select {
 	case <-l.start:
